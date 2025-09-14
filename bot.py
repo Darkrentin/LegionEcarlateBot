@@ -62,7 +62,7 @@ async def setup_timer(interaction: discord.Interaction):
         if message: # Check if message was found
             await message.delete()
 
-    sent_message = await interaction.followup.send(get_timer_msg())
+    sent_message = await interaction.followup.send(get_timer_msg(),ephemeral=False)
     
     data['timer_msg_id'] = sent_message.id
     data['timer_channel_id'] = interaction.channel.id
