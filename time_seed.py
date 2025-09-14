@@ -8,16 +8,14 @@ import lib
 URL = 'https://contestedzonetimers.com/'
 
 def get_seed_time():
-    
+    driver = None
     chrome_options = webdriver.ChromeOptions()
     chrome_options.add_argument("--headless")
     
     start_time = time.time()
     
-    driver = webdriver.Chrome(options=chrome_options)
-
     try:
-        
+        driver = webdriver.Chrome(options=chrome_options)
         driver.get(URL)
 
         wait = WebDriverWait(driver, 10)
@@ -48,7 +46,8 @@ def get_seed_time():
         return f"error : {e}"
 
     finally:
-        driver.quit()
+        if driver:
+            driver.quit()
 
 def save_time_seed(time_seed):
     data = lib.load_json()
