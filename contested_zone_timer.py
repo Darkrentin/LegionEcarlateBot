@@ -1,7 +1,8 @@
 import time
 import datetime
+import lib
 
-SEED_TIME = 1757790000-311
+SEED_TIME = 1757856287#1757790000-311
 CLOSE_PHASE_TIME = 7200  #2h
 OPEN_PHASE_TIME = 3600   #1h
 RESET_PHASE_TIME = 300   #5min
@@ -107,9 +108,16 @@ def get_light_status(time_in_cycle=-1,hangar_phase=""):
     
     elif hangar_phase == 'RESET':
         pass
-    
+
     return " ".join(lights)
 
+
+def load_time_seed():
+    data = lib.load_json()
+    SEED_TIME = data['time_seed']
+    print(f"New time seed : {SEED_TIME}")
+
+load_time_seed()
 time_in_cycle = get_time_in_cycle()
 print(format_time(CYCLE_TIME-time_in_cycle))
 print(get_hangar_phase())
