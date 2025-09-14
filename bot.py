@@ -55,7 +55,7 @@ async def get_message(bot, channel_id, message_id):
 
 @bot.tree.command(name="setup_timer")
 async def setup_timer(interaction: discord.Interaction):
-    await interaction.response.defer(ephemeral=True)
+    await interaction.response.defer(ephemeral=False)
 
     if data['timer_msg_id']!=0 and data['timer_channel_id']!=0:
         message = await get_message(bot, data['timer_channel_id'], data['timer_msg_id'])
@@ -149,7 +149,7 @@ def get_all_tablets():
 
 @bot.tree.command(name="tablets_status")
 async def tablets_status(interaction: discord.Interaction):
-    await interaction.response.defer(ephemeral=True)
+    await interaction.response.defer(ephemeral=False)
     
     msg = "## -----------Tablets Status----------\n"
     msg += "Tablets      | :one: | :two: | :three: | :four: | :five: | :six: | :seven: |\n"
