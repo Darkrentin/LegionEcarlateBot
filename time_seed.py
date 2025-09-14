@@ -60,3 +60,4 @@ def save_time_seed(time_seed):
 def update_time_seed():
     time_seed = get_seed_time()
     save_time_seed(time_seed)
+    return time_seed

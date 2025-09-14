@@ -160,6 +160,14 @@ async def tablets_status(interaction: discord.Interaction):
     
     await interaction.followup.send(msg,ephemeral=False)
 
+@bot.tree.command(name="update_time_seed")
+async def update_time_seed(interaction: discord.Interaction):
+    await interaction.response.defer(ephemeral=True)
+    
+    seed = time_seed.update_time_seed()
+
+    await interaction.followup.send(f"Time Seed Updated ! New seed : {seed}",ephemeral=True)
+
 
 
 def main():
