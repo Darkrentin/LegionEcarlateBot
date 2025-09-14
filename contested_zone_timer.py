@@ -24,11 +24,6 @@ OFF_LIGHT = "⚫"
 RED_LIGHT = "🔴"
 NUMBER_OF_LIGHT = 5
 
-def format_time(seconds):
-    h = seconds // 3600
-    m = (seconds % 3600) // 60
-    s = seconds % 60
-    return f"{h:02}:{m:02}:{s:02}"
 
 def get_time_in_cycle():
     actual_time = int(time.time())
@@ -80,6 +75,10 @@ def get_time_of_phase(hangar_phase):
     elif hangar_phase=='RESET':
         return RESET_PHASE_TIME
 
+def get_time_until_end(time_in_cycle=-1):
+    if time_in_cycle==-1 : time_in_cycle = get_time_in_cycle()
+
+    return CYCLE_TIME-time_in_cycle
 
 def get_light_status(time_in_cycle=-1,hangar_phase=""):
     if time_in_cycle==-1 : time_in_cycle = get_time_in_cycle()
@@ -109,17 +108,10 @@ def get_light_status(time_in_cycle=-1,hangar_phase=""):
     elif hangar_phase == 'RESET':
         pass
 
-    return " ".join(lights)
+    return "  ".join(lights)
 
 
 def load_time_seed():
     data = lib.load_json()
     SEED_TIME = data['time_seed']
     print(f"New time seed : {SEED_TIME}")
-
-load_time_seed()
-time_in_cycle = get_time_in_cycle()
-print(format_time(CYCLE_TIME-time_in_cycle))
-print(get_hangar_phase())
-print(format_time(get_time_until_next_phase()))
-print(get_light_status())
