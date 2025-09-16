@@ -90,6 +90,8 @@ def parse_tablets(str: str):
     return tablets
 
 
+
+
 @bot.tree.command(name="add_tablets")
 async def add_tablets(interaction: discord.Interaction, player: discord.Member, tablets_list: str):
     await interaction.response.defer(ephemeral=True)
@@ -137,6 +139,35 @@ async def remove_tablets(interaction: discord.Interaction, player: discord.Membe
     except Exception as e:
         await interaction.followup.send(f"error: {e}", ephemeral=True)
 
+@bot.tree.command(name="transfer_tablets")
+async def transfer_tablets(interaction: discord.Interaction, from_player: discord.Member, to_player: discord.Member, tablets_list: str):
+    await interaction.response.defer(ephemeral=True)
+
+    try:
+        tablets = parse_tablets(tablets_list)
+        from_player_id_str = str(from_player.id)
+        to_player_id_str = str(to_player.id)
+
+        if from_player_id_str not in data['tablets']['players']:
+            await interaction.followup.send(content="Erreur: joueur source non trouvé.", ephemeral=True)
+            return
+
+        if to_player_id_str not in data['tablets']['players']:
+            data['tablets']['players'][to_player_id_str] = [0] * 7
+
+        for i in range(7):
+            data['tablets']['players'][from_player_id_str][i] -= tablets[i]
+            data['tablets']['players'][to_player_id_str][i] += tablets[i]
+            if data['tablets']['players'][from_player_id_str][i] < 0:
+                await interaction.followup.send(content="error: Not enough tablets", ephemeral=True)
+                return
+
+        lib.save_json(data)
+        await interaction.followup.send(content="tablets transferred !", ephemeral=True)
+
+    except Exception as e:
+        await interaction.followup.send(f"error: {e}", ephemeral=True)
+
 def get_all_tablets():
     global data
     
@@ -146,6 +177,10 @@ def get_all_tablets():
             for i in range(7):
                 tablets[i] += player_tablets[i]
     return tablets
+
+def get_number_of_valid_set(tablets):
+    return tablets.index(min(tablets))
+
 
 @bot.tree.command(name="tablets_status")
 async def tablets_status(interaction: discord.Interaction):
