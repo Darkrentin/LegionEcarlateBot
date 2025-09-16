@@ -1,5 +1,5 @@
 import discord
-from discord.ext import commands
+from discord.ext import commands, tasks
 import os
 import time
 import contested_zone_timer
@@ -19,6 +19,7 @@ async def on_ready():
     print(f'{bot.user} Ready !')
     synced = await bot.tree.sync()  
     print(f"All Command Sync {len(synced)}")
+    update_hangar_message.start()
 
 def get_timer_msg():
     timer_until_end = contested_zone_timer.get_time_until_end()
@@ -179,7 +180,7 @@ def get_all_tablets():
     return tablets
 
 def get_number_of_valid_set(tablets):
-    return tablets.index(min(tablets))
+    return min(tablets)
 
 
 @bot.tree.command(name="tablets_status")
@@ -191,7 +192,11 @@ async def tablets_status(interaction: discord.Interaction):
     
     tablets = get_all_tablets()
     
-    msg += "Quantity   | " + "  | ".join(f"{v:02d}" for v in tablets) + " |\n"
+    msg += "Quantity   | " + "  | ".join(f"{v:02d}" for v in tablets) + " |\n\n"
+
+    nb_of_valid_set = get_number_of_valid_set(tablets)
+
+    msg += f"**Number of Sets:** {nb_of_valid_set}"
     
     await interaction.followup.send(msg,ephemeral=False)
 
@@ -203,6 +208,23 @@ async def update_time_seed(interaction: discord.Interaction):
 
     await interaction.followup.send(f"Time Seed Updated ! New seed : {seed}",ephemeral=True)
 
+
+#Task
+@tasks.loop(seconds=30)
+async def update_hangar_message():
+    global data
+
+    if 'timer_msg_id' not in data or data['timer_msg_id'] == 0:
+        return
+
+    message = await get_message(bot, data['timer_channel_id'], data['timer_msg_id'])
+    
+    if message:
+        await message.edit(content=get_timer_msg())
+    else:
+        data['timer_msg_id'] = 0
+        data['timer_channel_id'] = 0
+        lib.save_json(data)
 
 
 def main():
