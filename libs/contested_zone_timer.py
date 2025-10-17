@@ -1,6 +1,4 @@
 import time
-import datetime
-import lib
 
 SEED_TIME = 1757856287#1757790000-311
 CLOSE_PHASE_TIME = 7200  #2h
@@ -111,7 +109,10 @@ def get_light_status(time_in_cycle=-1,hangar_phase=""):
     return "  ".join(lights)
 
 
-def load_time_seed():
-    data = lib.load_json()
-    SEED_TIME = data['time_seed']
-    print(f"New time seed : {SEED_TIME}")
+def load_time_seed(data):
+    global SEED_TIME
+    if data and 'time_seed' in data and isinstance(data['time_seed'], int):
+        SEED_TIME = data['time_seed']
+        print(f"New time seed : {SEED_TIME}")
+    else:
+        print("Warning: time_seed not found or invalid in data. Using default.")

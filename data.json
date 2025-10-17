@@ -1,6 +1,6 @@
 {
-    "time_seed": 1757878487,
-    "timer_msg_id": 1416765998970699787,
+    "time_seed": 1760708987,
+    "timer_msg_id": 1428464996064432181,
     "timer_channel_id": 1170663428742975498,
     "tablets": {
         "tablets": {
@@ -27,6 +27,7 @@
                 6
             ]
         },
-        "players": {}
+        "players": {
+        }
     }
 }
