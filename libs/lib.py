@@ -1,5 +1,6 @@
 import json
 from pathlib import Path
+import aiofiles
 
 DATA="data/data.json"
 SHIP_LIST="data/shipList.json"
@@ -8,20 +9,23 @@ FLEET="data/fleet.json"
 
 BASE_PATH = Path(__file__).parent.parent
 
-def load_json(filename: str):
+async def load_json(filename: str):
     filepath = BASE_PATH / filename
     if not filepath.exists():
         return None
     try:
-        with open(filepath, "r", encoding="utf-8") as f:
-            return json.load(f)
+        async with aiofiles.open(filepath, "r", encoding="utf-8") as f:
+            content = await f.read()
+            return json.loads(content)
     except (json.JSONDecodeError, IOError):
         return None
 
-def save_json(data: dict, filename: str):
+async def save_json(data: dict, filename: str):
     filepath = BASE_PATH / filename
-    with open(filepath, "w", encoding="utf-8") as f:
-        json.dump(data, f, ensure_ascii=False, indent=4)
+    # S'assurer que le dossier parent existe
+    filepath.parent.mkdir(parents=True, exist_ok=True)
+    async with aiofiles.open(filepath, "w", encoding="utf-8") as f:
+        await f.write(json.dumps(data, ensure_ascii=False, indent=4))
 
 def format_time(seconds: int) -> str:
     seconds = int(seconds)
