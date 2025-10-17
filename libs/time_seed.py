@@ -59,7 +59,8 @@ async def save_time_seed(time_seed):
 
     await lib.save_json(data, lib.DATA)
 
-def update_time_seed():
+async def update_time_seed():
     time_seed = get_seed_time()
-    save_time_seed(time_seed)
+    if not isinstance(time_seed, str): # Avoid saving error messages
+        await save_time_seed(time_seed)
     return time_seed
