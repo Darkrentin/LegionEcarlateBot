@@ -1,10 +1,10 @@
 import json
 from pathlib import Path
 
-DATA="data.json"
-SHIP_LIST="shipList.json"
-SHIP_DB="shipDB.json"
-FLEET="fleet.json"
+DATA="data/data.json"
+SHIP_LIST="data/shipList.json"
+SHIP_DB="data/shipDB.json"
+FLEET="data/fleet.json"
 
 BASE_PATH = Path(__file__).parent.parent
 
