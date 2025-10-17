@@ -173,7 +173,7 @@ class ContestedZoneCog(commands.Cog):
     @commands.has_permissions(administrator=True)
     async def update_time_seed(self, ctx: commands.Context):
         await ctx.defer(ephemeral=True)
-        seed = time_seed.update_time_seed()
+        seed = await time_seed.update_time_seed()
         self.data['time_seed'] = seed
         contested_zone_timer.load_time_seed(self.data)
         await ctx.send(f"Time Seed mis à jour ! Nouveau seed : {seed}", ephemeral=True)

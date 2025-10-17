@@ -5,10 +5,10 @@ from libs import lib
 from libs import fleet_manager
 
 class FleetManagerCog(commands.Cog):
-    def __init__(self, bot: commands.Bot, data: dict):
+    def __init__(self, bot: commands.Bot, data: dict, ship_list: list):
         self.bot = bot
         self.data = data
-        self.shipList = fleet_manager.generate_ship_name_list()
+        self.shipList = ship_list
     
     async def ship_autocomplete(
         self,
@@ -164,7 +164,10 @@ class FleetManagerCog(commands.Cog):
             await ctx.send(f"❌ **Erreur :** {e}", ephemeral=True)
 
 async def setup(bot: commands.Bot):
-    data = await lib.load_json(lib.FLEET)
-    if data is None:
-        data = {}
-    await bot.add_cog(FleetManagerCog(bot, data))
+    fleet_data = await lib.load_json(lib.FLEET)
+    if fleet_data is None:
+        fleet_data = {}
+    
+    ship_list = await fleet_manager.generate_ship_name_list()
+    
+    await bot.add_cog(FleetManagerCog(bot, fleet_data, ship_list))
