@@ -62,7 +62,7 @@ class ContestedZoneCog(commands.Cog):
         sent_message = await ctx.send(get_timer_msg())
         self.data['timer_msg_id'] = sent_message.id
         self.data['timer_channel_id'] = ctx.channel.id
-        lib.save_json(self.data, lib.DATA)
+        await lib.save_json(self.data, lib.DATA)
 
     @commands.hybrid_command(name="cz_add_tablets", description="Ajoute des tablettes à un joueur.")
     async def add_tablets(self, ctx: commands.Context, player: discord.Member, tablets_list: str):
@@ -76,7 +76,7 @@ class ContestedZoneCog(commands.Cog):
                 self.data['tablets']['players'][player_id_str] = [0] * 7
             for i in range(7):
                 self.data['tablets']['players'][player_id_str][i] += tablets[i]
-            lib.save_json(self.data, lib.DATA)
+            await lib.save_json(self.data, lib.DATA)
             await ctx.send("Tablettes ajoutées !", ephemeral=True)
         except Exception as e:
             await ctx.send(f"Erreur : {e}", ephemeral=True)
@@ -101,7 +101,7 @@ class ContestedZoneCog(commands.Cog):
                     await ctx.send(content="Erreur: Pas assez de tablettes.", ephemeral=True)
                     return
 
-            lib.save_json(self.data, lib.DATA)
+            await lib.save_json(self.data, lib.DATA)
             await ctx.send(content="Tablettes retirées !", ephemeral=True)
         except Exception as e:
             await ctx.send(f"Erreur : {e}", ephemeral=True)
@@ -133,7 +133,7 @@ class ContestedZoneCog(commands.Cog):
                 self.data['tablets']['players'][from_player_id_str][i] -= tablets[i]
                 self.data['tablets']['players'][to_player_id_str][i] += tablets[i]
 
-            lib.save_json(self.data, lib.DATA)
+            await lib.save_json(self.data, lib.DATA)
             await ctx.send(content="Tablettes transférées !", ephemeral=True)
         except Exception as e:
             await ctx.send(f"Erreur : {e}", ephemeral=True)
@@ -189,12 +189,12 @@ class ContestedZoneCog(commands.Cog):
         else:
             self.data['timer_msg_id'] = 0
             self.data['timer_channel_id'] = 0
-            lib.save_json(self.data, lib.DATA)
+            await lib.save_json(self.data, lib.DATA)
 
     @update_hangar_message.before_loop
     async def before_update_hangar_message(self):
         await self.bot.wait_until_ready()
 
 async def setup(bot: commands.Bot):
-    data = lib.load_json(lib.DATA)
+    data = await lib.load_json(lib.DATA)
     await bot.add_cog(ContestedZoneCog(bot, data))
