@@ -150,7 +150,7 @@ class FleetManagerCog(commands.Cog):
     async def get_save_fleet(self, ctx: commands.Context):
         await ctx.defer(ephemeral=True)
         try:
-            filename = "save.json"
+            filename = "data/save.json"
             save_data = fleet_manager.create_fleet_save(self.data)
             
             if not save_data["canvasItems"]:
