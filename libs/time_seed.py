@@ -52,7 +52,7 @@ def get_seed_time():
         if driver:
             driver.quit()
 
-def save_time_seed(time_seed):
+async def save_time_seed(time_seed):
     data = await lib.load_json(lib.DATA)
 
     data['time_seed'] = time_seed
