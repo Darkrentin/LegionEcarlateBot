@@ -19,6 +19,9 @@ def format_name(name: str):
     formatted_name = spaced_name.strip().replace(' ', '-')
     if not ("super-hornet" in formatted_name):
         formatted_name=formatted_name.replace("mk-ii","mkii")
+
+    if formatted_name=="mercury":
+        formatted_name="mercury-star-runner"
     return formatted_name
 
 def create_ship_save(name,id):
