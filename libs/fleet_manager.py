@@ -62,6 +62,29 @@ def create_fleet_save(data):
         for s in data[player]["InGame"]:
             save["canvasItems"].append(create_ship_save(s,i))
             i+=1
+    for player in data:
+        for s in data[player]["OnRSI"]:
+            save["canvasItems"].append(create_ship_save(s,i))
+            i+=1
     return save
 
+def create_fleet_on_rsi_save(data):
+    save = {}
+    save["type"]="starjumpFleetviewer"
+    save["version"]=1
+    save["backgroundColor"]="0c000000"
+    save["canvasZoom"]="0.1"
+    save["canvasPanX"]="0"
+    save["canvasPanY"]="0"
+    save["shipScaleFactor"]="4.0"
+    save["minZoom"]="0.0010000000"
+    save["maxZoom"]="1.0000000000"
+    save["canvasItems"] = []
+
+    i = 1
+    for player in data:
+        for s in data[player]["OnRSI"]:
+            save["canvasItems"].append(create_ship_save(s,i))
+            i+=1
+    return save
 
