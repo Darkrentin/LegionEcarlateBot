@@ -92,16 +92,16 @@ class FleetManagerCog(commands.Cog):
             if player_id_str not in self.data or (not self.data[player_id_str].get("InGame") and not self.data[player_id_str].get("OnRSI")):
                 await ctx.send(f"ℹ️ Vous n'avez aucun vaisseau enregistré.", ephemeral=True)
             else:
-                msg = f"## 🚀 Flotte de {ctx.author.display_name}\n"
+                msg = f"## <:Logo:1306335943568920717> Flotte de {ctx.author.display_name}\n"
                 
                 in_game_ships = self.data[player_id_str].get("InGame", [])
                 if in_game_ships:
-                    msg += "### 🎮 Flotte en jeu\n"
+                    msg += "### <:LogoBlanc:1306335856532914206> Flotte en jeu\n"
                     msg += "```\n" + "\n".join(f"- {ship}" for ship in sorted(in_game_ships)) + "\n```\n"
                 
                 on_rsi_ships = self.data[player_id_str].get("OnRSI", [])
                 if on_rsi_ships:
-                    msg += "###  :rsi: Flotte RSI\n"
+                    msg += "### <:rsi:778326516064321581> Flotte sur RSI\n"
                     msg += "```\n" + "\n".join(f"- {ship}" for ship in sorted(on_rsi_ships)) + "\n```\n"
                     
                 await ctx.send(msg, ephemeral=True)
@@ -121,7 +121,7 @@ class FleetManagerCog(commands.Cog):
                 for ship in fleets.get("OnRSI", []):
                     all_on_rsi[ship] = all_on_rsi.get(ship, 0) + 1
 
-            msg = "## 🚀 Flotte de la Légion Écarlate\n---\n"
+            msg = "## <:Logo:1306335943568920717> Flotte de la Légion Écarlate\n"
 
             if not all_in_game and not all_on_rsi:
                 msg += "ℹ️ Aucun vaisseau n'a encore été enregistré dans la flotte de l'organisation."
@@ -129,14 +129,14 @@ class FleetManagerCog(commands.Cog):
                 return
 
             if all_in_game:
-                msg += "### 🎮 Flotte totale en jeu\n"
+                msg += "### <:LogoBlanc:1306335856532914206> Flotte totale en jeu\n"
                 msg += "```\n"
                 for ship, count in sorted(all_in_game.items()):
                     msg += f"- {ship} (x{count})\n"
                 msg += "```\n"
             
             if all_on_rsi:
-                msg += "### :rsi: Flotte totale RSI\n"
+                msg += "### <:rsi:778326516064321581> Flotte totale sur RSI\n"
                 msg += "```\n"
                 for ship, count in sorted(all_on_rsi.items()):
                     msg += f"- {ship} (x{count})\n"
