@@ -6,6 +6,7 @@ DATA="data/data.json"
 SHIP_LIST="data/shipList.json"
 SHIP_DB="data/shipDB.json"
 FLEET="data/fleet.json"
+SAVE="data/save.json"
 
 BASE_PATH = Path(__file__).parent.parent
 
@@ -33,3 +34,12 @@ def format_time(seconds: int) -> str:
     m = (seconds % 3600) // 60
     s = seconds % 60
     return f"{h:02}:{m:02}:{s:02}"
+
+def init_data():
+    data={}
+    data["time_seed"]=0
+    data["timer_msg_id"]=0
+    data["timer_channel_id"]=0
+    data["players"]=[]
+
+    return data

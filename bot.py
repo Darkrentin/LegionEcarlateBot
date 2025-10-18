@@ -5,6 +5,7 @@ import asyncio
 from libs import contested_zone_timer
 from libs import time_seed
 from libs import lib
+from dotenv import load_dotenv
 
 intents = discord.Intents.default()
 intents.message_content = True
@@ -32,7 +33,10 @@ class LegionBot(commands.Bot):
 
 async def main():
     # Initialisation
-    await time_seed.update_time_seed()
+    load_dotenv()
+    time_seed.update_time_seed()
+    data = lib.load_json(lib.DATA)
+    contested_zone_timer.load_time_seed(data)
 
     bot = LegionBot()
     await bot.start(os.getenv('TOKEN'))
