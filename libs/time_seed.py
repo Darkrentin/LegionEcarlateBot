@@ -3,6 +3,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import time
+
 from . import lib
 
 URL = 'https://contestedzonetimers.com/'
@@ -58,9 +59,10 @@ def save_time_seed(time_seed):
 
     data['time_seed'] = time_seed
 
-    lib.save_json(data, lib.DATA)
+    await lib.save_json(data, lib.DATA)
 
-def update_time_seed():
+async def update_time_seed():
     time_seed = get_seed_time()
-    save_time_seed(time_seed)
+    if not isinstance(time_seed, str): # Avoid saving error messages
+        await save_time_seed(time_seed)
     return time_seed

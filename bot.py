@@ -15,6 +15,12 @@ class LegionBot(commands.Bot):
         super().__init__(command_prefix="!", intents=intents)
 
     async def setup_hook(self):
+        # Load data once
+        data = await lib.load_json(lib.DATA)
+        if data is None:
+            data = {} # Ensure data is a dict
+        contested_zone_timer.load_time_seed(data)
+
         for filename in os.listdir('./cogs'):
             if filename.endswith('.py'):
                 await self.load_extension(f'cogs.{filename[:-3]}')
@@ -25,7 +31,7 @@ class LegionBot(commands.Bot):
     async def on_ready(self):
         print(f'{self.user} is ready')
 
-def main():
+async def main():
     # Initialisation
     load_dotenv()
     time_seed.update_time_seed()
@@ -33,7 +39,10 @@ def main():
     contested_zone_timer.load_time_seed(data)
 
     bot = LegionBot()
-    bot.run(os.getenv('TOKEN'))
+    await bot.start(os.getenv('TOKEN'))
 
 if __name__ == '__main__':
-    main()
+    try:
+        asyncio.run(main())
+    except KeyboardInterrupt:
+        print("Bot stopped by user.")

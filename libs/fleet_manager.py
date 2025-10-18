@@ -2,12 +2,13 @@ from . import lib
 import unicodedata
 import re
 
-def generate_ship_name_list():
+async def generate_ship_name_list():
     ship_name_list = []
 
-    data = lib.load_json(lib.SHIP_LIST)
-    for ship in data:
-        ship_name_list.append(ship)
+    data = await lib.load_json(lib.SHIP_LIST)
+    if data:
+        for ship in data:
+            ship_name_list.append(ship)
     
     return ship_name_list
 
