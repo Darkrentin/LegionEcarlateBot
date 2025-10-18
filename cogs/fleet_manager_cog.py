@@ -163,10 +163,10 @@ class FleetManagerCog(commands.Cog):
             await ctx.send(f"❌ **Erreur :** {e}", ephemeral=True)
 
 async def setup(bot: commands.Bot):
-    fleet_data = await lib.load_json(lib.FLEET)
+    fleet_data = lib.load_json(lib.FLEET)
     if fleet_data is None:
         fleet_data = {}
     
-    ship_list = await fleet_manager.generate_ship_name_list()
+    ship_list = fleet_manager.generate_ship_name_list()
     
     await bot.add_cog(FleetManagerCog(bot, fleet_data, ship_list))
