@@ -182,7 +182,7 @@ class ContestedZoneCog(commands.Cog):
     @tasks.loop(seconds=30)
     async def update_hangar_message(self):
         if self.data is None:
-            data = lib.init_data()
+            self.data = lib.init_data()
         if 'timer_msg_id' not in self.data or self.data['timer_msg_id'] == 0:
             return
         message = await get_message(self.bot, self.data['timer_channel_id'], self.data['timer_msg_id'])
