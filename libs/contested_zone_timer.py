@@ -111,7 +111,7 @@ def get_light_status(time_in_cycle=-1,hangar_phase=""):
 
 def load_time_seed(data):
     global SEED_TIME
-    if data and 'time_seed' in data and isinstance(data['time_seed'], int):
+    if data and 'time_seed' in data:
         SEED_TIME = data['time_seed']
         print(f"New time seed : {SEED_TIME}")
     else:
