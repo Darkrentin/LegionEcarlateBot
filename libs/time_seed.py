@@ -53,6 +53,8 @@ def get_seed_time():
 
 def save_time_seed(time_seed):
     data = lib.load_json(lib.DATA)
+    if data is None:
+        data=lib.init_data()
 
     data['time_seed'] = time_seed
 

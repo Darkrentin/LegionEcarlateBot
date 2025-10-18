@@ -150,15 +150,14 @@ class FleetManagerCog(commands.Cog):
     async def get_save_fleet(self, ctx: commands.Context):
         await ctx.defer(ephemeral=True)
         try:
-            filename = "save.json"
             save_data = fleet_manager.create_fleet_save(self.data)
             
             if not save_data["canvasItems"]:
                 await ctx.send("ℹ️ La flotte est vide. Le fichier de sauvegarde n'a pas été généré.", ephemeral=True)
                 return
 
-            lib.save_json(save_data, filename)
-            await ctx.send("✅ Voici le fichier de sauvegarde de la flotte :", file=discord.File(lib.BASE_PATH / filename), ephemeral=True)
+            lib.save_json(save_data, lib.SAVE)
+            await ctx.send("✅ Voici le fichier de sauvegarde de la flotte :", file=discord.File(lib.BASE_PATH / lib.SAVE), ephemeral=True)
             
         except Exception as e:
             await ctx.send(f"❌ **Erreur :** {e}", ephemeral=True)
