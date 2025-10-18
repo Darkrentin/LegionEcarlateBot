@@ -29,7 +29,7 @@ class FleetManagerCog(commands.Cog):
             if player_id_str not in self.data:
                 self.data[player_id_str] = { "InGame": [], "OnRSI": []}
             self.data[player_id_str]["InGame"].append(ship)
-            await lib.save_json(self.data,lib.FLEET)
+            lib.save_json(self.data,lib.FLEET)
             await ctx.send(f"✅ **{ship}** a été ajouté à votre flotte **en jeu**.", ephemeral=True)
         except Exception as e:
             await ctx.send(f"❌ **Erreur :** {e}", ephemeral=True)
@@ -43,7 +43,7 @@ class FleetManagerCog(commands.Cog):
             if player_id_str not in self.data:
                 self.data[player_id_str] = { "InGame": [], "OnRSI": []}
             self.data[player_id_str]["OnRSI"].append(ship)
-            await lib.save_json(self.data,lib.FLEET)
+            lib.save_json(self.data,lib.FLEET)
             await ctx.send(f"✅ **{ship}** a été ajouté à votre flotte **sur RSI**.", ephemeral=True)
         except Exception as e:
             await ctx.send(f"❌ **Erreur :** {e}", ephemeral=True)
@@ -61,7 +61,7 @@ class FleetManagerCog(commands.Cog):
                     await ctx.send(f"⚠️ Vous ne possédez pas le vaisseau **{ship}** dans votre flotte **en jeu**.", ephemeral=True)
                 else:
                     self.data[player_id_str]["InGame"].remove(ship)
-                    await lib.save_json(self.data,lib.FLEET)
+                    lib.save_json(self.data,lib.FLEET)
                     await ctx.send(f"🗑️ **{ship}** a été retiré de votre flotte **en jeu**.", ephemeral=True)
         except Exception as e:
             await ctx.send(f"❌ **Erreur :** {e}", ephemeral=True)
@@ -79,7 +79,7 @@ class FleetManagerCog(commands.Cog):
                     await ctx.send(f"⚠️ Vous ne possédez pas le vaisseau **{ship}** dans votre flotte **sur RSI**.", ephemeral=True)
                 else:
                     self.data[player_id_str]["OnRSI"].remove(ship)
-                    await lib.save_json(self.data,lib.FLEET)
+                    lib.save_json(self.data,lib.FLEET)
                     await ctx.send(f"🗑️ **{ship}** a été retiré de votre flotte **sur RSI**.", ephemeral=True)
         except Exception as e:
             await ctx.send(f"❌ **Erreur :** {e}", ephemeral=True)
