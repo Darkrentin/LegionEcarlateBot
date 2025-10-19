@@ -12,6 +12,21 @@ def generate_ship_name_list():
     
     return ship_name_list
 
+
+exception_name_dict = {
+    "p-72-archimedes": "p72-archimedes",
+    "f7a-hornet-mkii": "f7a-mkii",
+    "f7c-hornet-mkii": "f7a-mkii",
+    "mercury": "mercury-star-runner"
+}
+
+def exception_name(name):
+    if name in exception_name_dict:
+        return exception_name_dict[name]
+    else:
+        return name
+    
+
 def format_name(name: str):
     nfkd_form = unicodedata.normalize('NFD', name)
     ascii_name = nfkd_form.encode('ascii', 'ignore').decode('utf-8')
@@ -20,9 +35,9 @@ def format_name(name: str):
     formatted_name = spaced_name.strip().replace(' ', '-')
     if not ("super-hornet" in formatted_name):
         formatted_name=formatted_name.replace("mk-ii","mkii")
+    
+    formatted_name = exception_name(formatted_name)
 
-    if formatted_name=="mercury":
-        formatted_name="mercury-star-runner"
     return formatted_name
 
 def create_ship_save(name,id):
@@ -34,7 +49,7 @@ def create_ship_save(name,id):
     ship["topRotation"]="0.0"
     ship["zoom"]="1.0"
     ship["viewAngle"]="iso"
-    ship["imageRes"]="l"
+    ship["imageRes"]="s"
     ship["imageScale"]="1"
     ship["dropShadow"]="true"
     ship["shipSlug"]=format_name(name)

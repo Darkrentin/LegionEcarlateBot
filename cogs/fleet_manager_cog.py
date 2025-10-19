@@ -157,7 +157,7 @@ class FleetManagerCog(commands.Cog):
                 return
 
             lib.save_json(save_data, lib.SAVE)
-            await ctx.send("✅ Voici le fichier de sauvegarde de la flotte :", file=discord.File(lib.BASE_PATH / lib.SAVE), ephemeral=True)
+            await ctx.send("✅ Voici le fichier de sauvegarde de la flotte a mettre sur [hangar.link](https://hangar.link/fleet/canvas):", file=discord.File(lib.BASE_PATH / lib.SAVE), ephemeral=True)
             
         except Exception as e:
             await ctx.send(f"❌ **Erreur :** {e}", ephemeral=True)
