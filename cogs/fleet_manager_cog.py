@@ -147,8 +147,8 @@ class FleetManagerCog(commands.Cog):
                 await ctx.send(msg, ephemeral=True)
                 return
 
-            await self.send_ship_list("### <:LogoBlanc:1306335856532914206> Flotte totale en jeu\n", all_in_game)
-            await self.send_ship_list("### <:rsi:778326516064321581> Flotte totale sur RSI\n", all_on_rsi)
+            await self.send_ship_list(ctx,"### <:LogoBlanc:1306335856532914206> Flotte totale en jeu\n", all_in_game)
+            await self.send_ship_list(ctx,"### <:rsi:778326516064321581> Flotte totale sur RSI\n", all_on_rsi)
 
             await ctx.send(msg)
         except Exception as e:
