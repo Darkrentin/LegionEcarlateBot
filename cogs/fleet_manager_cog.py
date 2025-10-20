@@ -108,6 +108,25 @@ class FleetManagerCog(commands.Cog):
         except Exception as e:
             await ctx.send(f"❌ **Erreur :** {e}", ephemeral=True)
     
+    async def send_ship_list(ctx: commands.Context, header, ship_dict):
+                if not ship_dict:
+                    return
+                
+                message_parts = []
+                current_part = f"{header}```\n"
+                for ship, count in sorted(ship_dict.items()):
+                    line = f"- {ship} (x{count})\n"
+                    if len(current_part) + len(line) > 1990: # Keep a buffer for closing backticks
+                        current_part += "```"
+                        message_parts.append(current_part)
+                        current_part = "```\n"
+                    current_part += line
+                current_part += "```"
+                message_parts.append(current_part)
+
+                for part in message_parts:
+                    await ctx.send(part)
+
     @commands.hybrid_command(name="fl_get_org_fleet", description="Affiche la liste de tous les vaisseaux de l'organisation.")
     async def get_org_fleet(self, ctx: commands.Context):
         await ctx.defer(ephemeral=False) # Visible par tous
@@ -128,19 +147,8 @@ class FleetManagerCog(commands.Cog):
                 await ctx.send(msg, ephemeral=True)
                 return
 
-            if all_in_game:
-                msg += "### <:LogoBlanc:1306335856532914206> Flotte totale en jeu\n"
-                msg += "```\n"
-                for ship, count in sorted(all_in_game.items()):
-                    msg += f"- {ship} (x{count})\n"
-                msg += "```\n"
-            
-            if all_on_rsi:
-                msg += "### <:rsi:778326516064321581> Flotte totale sur RSI\n"
-                msg += "```\n"
-                for ship, count in sorted(all_on_rsi.items()):
-                    msg += f"- {ship} (x{count})\n"
-                msg += "```\n"
+            await self.send_ship_list("### <:LogoBlanc:1306335856532914206> Flotte totale en jeu\n", all_in_game)
+            await self.send_ship_list("### <:rsi:778326516064321581> Flotte totale sur RSI\n", all_on_rsi)
 
             await ctx.send(msg)
         except Exception as e:
