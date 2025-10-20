@@ -108,7 +108,7 @@ class FleetManagerCog(commands.Cog):
         except Exception as e:
             await ctx.send(f"❌ **Erreur :** {e}", ephemeral=True)
     
-    async def send_ship_list(ctx: commands.Context, header, ship_dict):
+    async def send_ship_list(self, ctx: commands.Context, header, ship_dict):
                 if not ship_dict:
                     return
                 
@@ -140,17 +140,16 @@ class FleetManagerCog(commands.Cog):
                 for ship in fleets.get("OnRSI", []):
                     all_on_rsi[ship] = all_on_rsi.get(ship, 0) + 1
 
-            msg = "## <:Logo:1306335943568920717> Flotte de la Légion Écarlate\n"
+            title = "## <:Logo:1306335943568920717> Flotte de la Légion Écarlate\n"
+            await ctx.send(title)
 
             if not all_in_game and not all_on_rsi:
-                msg += "ℹ️ Aucun vaisseau n'a encore été enregistré dans la flotte de l'organisation."
-                await ctx.send(msg, ephemeral=True)
+                await ctx.send("ℹ️ Aucun vaisseau n'a encore été enregistré dans la flotte de l'organisation.", ephemeral=True)
                 return
 
-            await self.send_ship_list(ctx,"### <:LogoBlanc:1306335856532914206> Flotte totale en jeu\n", all_in_game)
-            await self.send_ship_list(ctx,"### <:rsi:778326516064321581> Flotte totale sur RSI\n", all_on_rsi)
+            await self.send_ship_list(ctx, "### <:LogoBlanc:1306335856532914206> Flotte totale en jeu\n", all_in_game)
+            await self.send_ship_list(ctx, "### <:rsi:778326516064321581> Flotte totale sur RSI\n", all_on_rsi)
 
-            await ctx.send(msg)
         except Exception as e:
             await ctx.send(f"❌ **Erreur :** {e}", ephemeral=True)
     
