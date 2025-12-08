@@ -142,32 +142,93 @@ class ContestedZoneCog(commands.Cog):
     async def tablets_status(self, ctx: commands.Context):
         await ctx.defer(ephemeral=False)
         
+        if 'tablets' not in self.data or 'players' not in self.data['tablets']:
+            await ctx.send("ℹ️ Aucune tablette n'a encore été enregistrée.")
+            return
+        
+        # Filtrer les joueurs qui ont au moins une tablette
+        players_with_tablets = {}
+        for player_id, tablets in self.data['tablets']['players'].items():
+            if sum(tablets) > 0:
+                member = ctx.guild.get_member(int(player_id))
+                player_name = member.display_name if member else f"Joueur {player_id}"
+                players_with_tablets[player_name] = tablets
+        
+        if not players_with_tablets:
+            await ctx.send("ℹ️ Aucune tablette n'a encore été collectée.")
+            return
+        
+        # Calculer le total par tablette
         all_tablets = [0] * 7
-        if 'tablets' in self.data and 'players' in self.data['tablets']:
-            for player_tablets in self.data['tablets']['players'].values():
-                for i in range(7):
-                    all_tablets[i] += player_tablets[i]
+        for tablets in players_with_tablets.values():
+            for i in range(7):
+                all_tablets[i] += tablets[i]
         
         num_sets = min(all_tablets)
         total_tablets = sum(all_tablets)
         
         msg = "## 📊 **Rapport de Collecte des Tablettes**\n"
-
-        header = "Tablette   | 1 | 2 | 3 | 4 | 5 | 6 | 7 |"
-        separator = "-----------|---|---|---|---|---|---|---|"
-        quantities_str = [f"{qty:^3}" for qty in all_tablets]
-        body = f"Quantité   |{'|'.join(quantities_str)}|"
-
+        
+        # Construire le tableau
+        max_name_length = max(len(name) for name in players_with_tablets.keys())
+        max_name_length = max(max_name_length, 18)  # Minimum pour "Joueur \ Tablettes"
+        
+        # En-tête
+        header = f"{'Joueur \\ Tablettes':<{max_name_length}} | 1 | 2 | 3 | 4 | 5 | 6 | 7 "
+        separator = "-" * len(header)
+        
         msg += "```\n"
         msg += f"{header}\n"
         msg += f"{separator}\n"
-        msg += f"{body}\n"
+        
+        # Lignes des joueurs
+        for player_name, tablets in sorted(players_with_tablets.items()):
+            tablets_str = [f"{qty:^3}" for qty in tablets]
+            line = f"{player_name:<{max_name_length}} |{'|'.join(tablets_str)}"
+            msg += f"{line}\n"
+        
+        # Ligne de total
+        msg += f"{separator}\n"
+        totals_str = [f"{qty:^3}" for qty in all_tablets]
+        total_line = f"{'TOTAL':<{max_name_length}} |{'|'.join(totals_str)}"
+        msg += f"{total_line}\n"
         msg += "```\n"
-
-        msg += f"📦 **Total de tablettes collectées :** `{total_tablets}`\n"
+        
         msg += f"💎 **Nombre de sets complets :** `{num_sets}`\n"
-
+        
         await ctx.send(msg)
+
+    @commands.hybrid_command(name="cz_hangars", description="Enregistre un hangar complété et retire un set complet de tablettes.")
+    async def hangars(self, ctx: commands.Context, player: discord.Member):
+        await ctx.defer(ephemeral=True)
+        try:
+            player_id_str = str(player.id)
+            
+            # Vérifier que le joueur existe
+            if 'tablets' not in self.data or 'players' not in self.data['tablets']:
+                await ctx.send("❌ Erreur: Aucune tablette enregistrée.", ephemeral=True)
+                return
+            
+            if player_id_str not in self.data['tablets']['players']:
+                await ctx.send(f"❌ Erreur: {player.display_name} n'a aucune tablette enregistrée.", ephemeral=True)
+                return
+            
+            # Vérifier que le joueur a au moins 1 de chaque tablette (set complet)
+            player_tablets = self.data['tablets']['players'][player_id_str]
+            for i in range(7):
+                if player_tablets[i] < 1:
+                    await ctx.send(f"❌ Erreur: {player.display_name} n'a pas un set complet de tablettes.\nTablette #{i+1} manquante.", ephemeral=True)
+                    return
+            
+            # Retirer 1 de chaque tablette
+            for i in range(7):
+                self.data['tablets']['players'][player_id_str][i] -= 1
+            
+            lib.save_json(self.data, lib.DATA)
+            await ctx.send(f"✅ Hangar complété ! Un set de tablettes a été retiré à {player.display_name}.", ephemeral=True)
+            
+        except Exception as e:
+            await ctx.send(f"❌ Erreur : {e}", ephemeral=True)
 
     @commands.hybrid_command(name="cz_update_time_seed", description="Met à jour le seed du timer (Admin).")
     @commands.has_permissions(administrator=True)
