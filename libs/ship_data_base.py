@@ -1,7 +1,7 @@
 from pathlib import Path
 import requests
 import json
-import lib
+from . import lib
 
 from bs4 import BeautifulSoup
 

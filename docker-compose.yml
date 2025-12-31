@@ -1,0 +1,16 @@
+services:
+  legion-bot:
+    build: .
+    container_name: legion-ecarlate-bot
+    restart: always
+    environment:
+      - TOKEN=${TOKEN}
+    volumes:
+      - ./data:/app/data
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 1G
+        reservations:
+          memory: 512M
