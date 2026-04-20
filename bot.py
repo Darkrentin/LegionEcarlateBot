@@ -21,7 +21,7 @@ class LegionBot(commands.Bot):
                 await self.load_extension(f'cogs.{filename[:-3]}')
         
         synced = await self.tree.sync()
-        print(f"all command synced ({len(synced)}.")
+        print(f"all command synced ({len(synced)}).")
 
     async def on_ready(self):
         print(f'{self.user} is ready')

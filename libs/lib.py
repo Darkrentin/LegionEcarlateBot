@@ -8,6 +8,7 @@ SHIP_LIST="data/shipList.json"
 SHIP_DB="data/shipDB.json"
 FLEET="data/fleet.json"
 SAVE="data/save.json"
+TIME="data/time.json"
 
 BASE_PATH = Path(__file__).parent.parent
 
@@ -80,3 +81,12 @@ def init_data():
     data["players"]=[]
 
     return data
+
+def get_dif_seconds(date_iso):
+    try:
+        date = datetime.fromisoformat(date_iso)
+        
+        diff = date - datetime.now()
+        return diff.total_seconds()
+    except ValueError:
+        return "error"

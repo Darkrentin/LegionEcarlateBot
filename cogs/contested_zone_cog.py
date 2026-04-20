@@ -45,24 +45,13 @@ class ContestedZoneCog(commands.Cog):
     def __init__(self, bot: commands.Bot, data: dict):
         self.bot = bot
         self.data = data
-        self.update_hangar_message.start()
-
-    def cog_unload(self):
-        self.update_hangar_message.cancel()
 
     # Commands
-    @commands.hybrid_command(name="cz_setup_timer", description="Affiche le panneau du timer de la zone contestée.")
-    async def setup_timer(self, ctx: commands.Context):
+    @commands.hybrid_command(name="cz_timer", description="Affiche le panneau du timer de la zone contestée.")
+    async def get_timer(self, ctx: commands.Context):
         await ctx.defer(ephemeral=False)
-        if self.data.get('timer_msg_id') and self.data.get('timer_channel_id'):
-            message = await get_message(self.bot, self.data['timer_channel_id'], self.data['timer_msg_id'])
-            if message:
-                await message.delete()
         
-        sent_message = await ctx.send(get_timer_msg())
-        self.data['timer_msg_id'] = sent_message.id
-        self.data['timer_channel_id'] = ctx.channel.id
-        lib.save_json(self.data, lib.DATA)
+        await ctx.send(get_timer_msg())
 
     @commands.hybrid_command(name="cz_add_tablets", description="Ajoute des tablettes à un joueur.")
     async def add_tablets(self, ctx: commands.Context, player: discord.Member, tablets_list: str):
@@ -238,25 +227,6 @@ class ContestedZoneCog(commands.Cog):
         self.data['time_seed'] = seed
         contested_zone_timer.load_time_seed(self.data)
         await ctx.send(f"Time Seed mis à jour ! Nouveau seed : {seed}", ephemeral=True)
-
-    # Task
-    @tasks.loop(seconds=30)
-    async def update_hangar_message(self):
-        if self.data is None:
-            self.data = lib.init_data()
-        if 'timer_msg_id' not in self.data or self.data['timer_msg_id'] == 0:
-            return
-        message = await get_message(self.bot, self.data['timer_channel_id'], self.data['timer_msg_id'])
-        if message:
-            await message.edit(content=get_timer_msg())
-        else:
-            self.data['timer_msg_id'] = 0
-            self.data['timer_channel_id'] = 0
-            lib.save_json(self.data, lib.DATA)
-
-    @update_hangar_message.before_loop
-    async def before_update_hangar_message(self):
-        await self.bot.wait_until_ready()
 
 async def setup(bot: commands.Bot):
     data = lib.load_json(lib.DATA)
