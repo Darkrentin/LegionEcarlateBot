@@ -51,9 +51,9 @@ class FunCog(commands.Cog):
         self.bot = bot
         self.data = data
 
-    @commands.hybrid_command(name="sq42soon", description="Affiche le temps restant avant l'Invictius") #"Affiche le temps restant avant la sortie de Squadron 42."
+    @commands.hybrid_command(name="sq42soon", description="Affiche le temps restant avant l'Invictus") #"Affiche le temps restant avant la sortie de Squadron 42."
     async def get_timer(self, ctx: commands.Context):
-        msg = "## On a \"*peut-être**\" des infos sur Squadron 42 (Invictius Launch Week) dans :\n"#"## **Squadron 42** sort dans :\n"
+        msg = "## On a \"**peut-être**\" des infos sur Squadron 42 (Invictus Launch Week) dans :\n"#"## **Squadron 42** sort dans :\n"
 
         sample = get_sample(self.data)
 
