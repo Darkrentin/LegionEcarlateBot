@@ -137,7 +137,7 @@ class ContestedZoneCog(commands.Cog):
             await ctx.send(content="Tablettes transférées !", ephemeral=True)
         except Exception as e:
             await ctx.send(f"Erreur : {e}", ephemeral=True)
-
+    
     @commands.hybrid_command(name="cz_tablets_status", description="Affiche l'état de toutes les tablettes collectées.")
     async def tablets_status(self, ctx: commands.Context):
         await ctx.defer(ephemeral=False)
@@ -174,7 +174,7 @@ class ContestedZoneCog(commands.Cog):
         max_name_length = max(max_name_length, 18)  # Minimum pour "Joueur \ Tablettes"
         
         # En-tête
-        header = f"{'Joueur \\ Tablettes':<{max_name_length}} | 1 | 2 | 3 | 4 | 5 | 6 | 7 "
+        header = f"{'Joueur / Tablettes':<{max_name_length}} | 1 | 2 | 3 | 4 | 5 | 6 | 7 "
         separator = "-" * len(header)
         
         msg += "```\n"

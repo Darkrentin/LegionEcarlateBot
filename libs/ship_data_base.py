@@ -1,20 +1,22 @@
 from pathlib import Path
 import requests
 import json
-from . import lib
+import lib
 
 from bs4 import BeautifulSoup
 
 import urllib3
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
-Url = "https://api.star-citizen.wiki/api/v3/vehicles?page=1&limit=1000&locale=en_EN"
+def getUrl(page):
+    return f"https://api.star-citizen.wiki/api/v3/vehicles?page={page}&limit=1000&locale=en_EN"
+
 script_dir = Path(__file__).parent
 
 DataBaseType = "Stardle" # All / Stardle / Simple
 
-def generate_ship_data_base():
-    data = requests.get(Url, verify=False)
+def generate_ship_data_base(page = 1):
+    data = requests.get(getUrl(page), verify=False)
     if data.status_code != 200:
         raise Exception("Error with reception of data")
 
@@ -43,7 +45,7 @@ def generate_ship_data_base():
         if DataBaseType == "Stardle":
             Ship["name"] = ShipData["name"]
             Ship["manufacturer"] = ShipData["manufacturer"]["name"]
-            Ship["role"] = ShipData["foci"]
+            Ship["role"] = ""#ShipData["foci"]
             Ship["length"] = ShipData["sizes"]["length"]
             
             Ship["value"] = ShipData["skus"]
@@ -73,3 +75,4 @@ def generate_ship_data_base():
 if __name__ == "__main__":
 
     generate_ship_data_base()
+    generate_ship_data_base(2)
