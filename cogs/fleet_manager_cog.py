@@ -175,6 +175,5 @@ async def setup(bot: commands.Bot):
         fleet_data = {}
     
     ship_list = fleet_manager.generate_ship_name_list()
-    print(ship_list)
     
     await bot.add_cog(FleetManagerCog(bot, fleet_data, ship_list))
