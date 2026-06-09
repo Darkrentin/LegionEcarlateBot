@@ -18,7 +18,7 @@ class FleetManagerCog(commands.Cog):
         return [
             app_commands.Choice(name=ship, value=ship)
             for ship in self.shipList if current.lower() in ship.lower()
-        ][:25] 
+        ] 
 
     @commands.hybrid_command(name="fl_add_in_game_ship", description="Ajoute un vaisseau à votre flotte disponible en jeu.")
     @app_commands.autocomplete(ship=ship_autocomplete)
