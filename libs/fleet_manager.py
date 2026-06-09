@@ -2,15 +2,29 @@ from . import lib
 import unicodedata
 import re
 
-def generate_ship_name_list():
-    ship_name_list = []
+import os
+import requests
+from dotenv import load_dotenv
 
-    data = lib.load_json(lib.SHIP_LIST)
-    if data:
-        for ship in data:
-            ship_name_list.append(ship)
+def generate_ship_name_list():
+    api_key = os.getenv("API_KEY")
+    url = "https://scdb.dserv.fr/ships/name"
     
-    return ship_name_list
+    headers = {
+        "X-API-KEY": api_key,
+        "Content-Type": "application/json"
+    }
+
+    try:
+        response = requests.get(url, headers=headers)
+        
+        response.raise_for_status()
+        
+        return response.json()
+
+    except requests.exceptions.RequestException as e:
+        print(f"Erreur lors de la récupération des noms de vaisseaux : {e}")
+        return []
 
 
 exception_name_dict = {
