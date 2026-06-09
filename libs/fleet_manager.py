@@ -9,23 +9,22 @@ from dotenv import load_dotenv
 def generate_ship_name_list():
     api_key = os.getenv("API_KEY")
     url = "https://scdb.dserv.fr/ships/name"
-    
-    headers = {
-        "X-API-KEY": api_key,
-        "Content-Type": "application/json"
-    }
+    headers = {"X-API-KEY": api_key}
 
     try:
         response = requests.get(url, headers=headers)
-        
         response.raise_for_status()
         
-        return response.json()
+        # On extrait directement la liste à partir de la clé "ships"
+        data = response.json()
+        ship_name_list = data.get("ships", [])
+        
+        print(f"Succès : {len(ship_name_list)} vaisseaux récupérés.")
+        return ship_name_list
 
     except requests.exceptions.RequestException as e:
-        print(f"Erreur lors de la récupération des noms de vaisseaux : {e}")
+        print(f"Erreur lors de la récupération : {e}")
         return []
-
 
 exception_name_dict = {
     "p-72-archimedes": "p72-archimedes",
