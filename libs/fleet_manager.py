@@ -17,15 +17,15 @@ def generate_ship_name_list():
 
     try:
         response = requests.get(url, headers=headers)
-        
+        print(f"DEBUG: Statut de la requête API : {response.status_code}") # AJOUTE CECI
         response.raise_for_status()
-        
-        return response.json()
-
-    except requests.exceptions.RequestException as e:
-        print(f"Erreur lors de la récupération des noms de vaisseaux : {e}")
+        data = response.json()
+        ship_list = data.get("ships", [])
+        print(f"DEBUG: Nombre de vaisseaux reçus : {len(ship_list)}") # AJOUTE CECI
+        return ship_list
+    except Exception as e:
+        print(f"DEBUG: ERREUR CRITIQUE API : {e}") # AJOUTE CECI
         return []
-
 
 exception_name_dict = {
     "p-72-archimedes": "p72-archimedes",
